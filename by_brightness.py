@@ -21,6 +21,7 @@ def get_brightness_data(cap, data, count):
             shift_value = gray_img - reduce_matrix
             shift_sum = sum(map(sum, shift_value))
             print(str(count) + '--' + str(shift_sum))
+            data.append(shift_sum)
             count = count + 1
         except BaseException:
             break
