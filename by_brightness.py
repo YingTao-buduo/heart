@@ -8,6 +8,7 @@ def get_brightness_data(cap, data, count):
             ret, frame = cap.read()
             gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+
             img_shape = gray_img.shape
             height, width = img_shape[0], img_shape[1]
             size = gray_img.size
@@ -22,8 +23,9 @@ def get_brightness_data(cap, data, count):
             shift_sum = sum(map(sum, shift_value))
             print(str(count) + '--' + str(shift_sum))
             data.append(shift_sum)
+            #data.append(sum(map(sum, gray_img)))
             count = count + 1
-        except BaseException:
+        except BaseException as e:
             break
     print('brightness ok')
     return data
