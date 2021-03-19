@@ -61,17 +61,17 @@ def count_peak(hue_frame_data):
 
         frames.append(index)
 
-    # avg_interval = frames[len(frames) - 1] / len(frames[1:])
-    #
-    # final_frames = [frames[0]]
-    # ld = 1
-    # for i in range(1, len(frames)):
-    #     if frames[i] - frames[i - ld] > avg_interval:
-    #         final_frames.append(frames[i])
-    #         ld = 1
-    #     else:
-    #         ld = ld + 1
-    #
-    # print(peak_num)
+    avg_interval = frames[len(frames) - 1] / len(frames[1:])
+
+    # exclude error peak
+    final_frames = [frames[0]]
+    ld = 1
+    for i in range(1, len(frames)):
+        if frames[i] - frames[i - ld] > avg_interval * 0.7:
+            final_frames.append(frames[i])
+            ld = 1
+        else:
+            ld = ld + 1
+
     print('Count OK')
-    return frames
+    return final_frames
