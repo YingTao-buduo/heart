@@ -4,6 +4,7 @@ import numpy as np
 
 def get_brightness_data(frames):
     data = []
+    print('Begin to read brightness')
     for frame in frames:
         gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -15,5 +16,5 @@ def get_brightness_data(frames):
         shift_sum = sum(map(sum, shift_value))
         print(str(shift_sum))
         data.append(shift_sum)
-    print('brightness ok')
+    print('Brightness OK')
     return data

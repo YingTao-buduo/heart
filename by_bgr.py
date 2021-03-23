@@ -6,12 +6,12 @@ def get_b_g_r_data(cap, data, count):
         try:
             ret, frame = cap.read()
             b, g, r = cv2.split(frame)
-            print(str(count) + '--' + str(sum(sum(r))))
             data.append(sum(sum(r)))
             count = count + 1
-        except BaseException:
+        except Exception as e:
+            print(e)
             break
 
-    print('bgr OK')
+    print('RGB OK')
     return data
 
