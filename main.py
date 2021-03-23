@@ -14,21 +14,19 @@ import sys
 
 ###################################################################################
 # parameters
-fromWhere = sys.argv[0]     # 0: from camera, 1: from file
-mode = sys.argv[1]          # 0: brightness, 1: from red channel, 2: from h of hsv
-fps = sys.argv[2]           # device's fps
-filename = sys.argv[3]      # video filename
+fromWhere = 0    # 0: from camera, 1: from file
+mode = 0          # 0: brightness, 1: from red channel, 2: from h of hsv
+fps = 30           # device's fps
+filename = 'C:/Users/YT-Laptop/Downloads/HRV/C10_2.mp4'     # video filename
 
 ###################################################################################
 # choose from where
 cap_frames = []
-if mode is 0:
+if fromWhere == 0:
     # from camera
     cap = cv2.VideoCapture(0)
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('output.avi', fourcc, fps, (300, 300))
-
-    cap_frames = []
+    out = cv2.VideoWriter('output.avi', fourcc, fps, (150, 150))
     f_count = 1
     while cap.isOpened():
         ret, frame = cap.read()
@@ -48,25 +46,24 @@ if mode is 0:
 else:
     # from file
     cap = cv2.VideoCapture(filename)
-    data_from_video = from_video.get_video_frames(cap)
+    cap_frames = from_video.get_video_frames(cap)
     cap.release()
     cv2.destroyAllWindows()
 
 ###################################################################################
 # data processing
-data_in = []
-if mode is 0:
-    data_in = by_brightness.get_brightness_data(cap_frames[30:330])
-elif mode is 1:
-    data_in = by_red.get_red_data(cap_frames[30:330])
-elif mode is 2:
-    data_in = by_hsv.get_hsv_data(cap_frames[30:330])
+data_before_fit = []
+if mode == 0:
+    data_before_fit = by_brightness.get_brightness_data(cap_frames[30:330])
+elif mode == 1:
+    data_before_fit = by_red.get_red_data(cap_frames[30:330])
+elif mode == 2:
+    data_before_fit = by_hsv.get_hsv_data(cap_frames[30:330])
 
 ###################################################################################
 # MedianAverageFilter
 # data_hsv_filter = filter.median_average(data_hsv, 3)
 # print(data_hsv_filter)
-data_before_fit = np.array(data_in)
 data_after_fit = np.array(fitter.fit(data_before_fit))
 data_fixed = data_before_fit - data_after_fit
 

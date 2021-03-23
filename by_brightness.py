@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import numba_sum
 
 
 def get_brightness_data(frames):
@@ -7,14 +8,8 @@ def get_brightness_data(frames):
     print('Begin to read brightness')
     for frame in frames:
         gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        img_shape = gray_img.shape
-        height, width = img_shape[0], img_shape[1]
-
-        reduce_matrix = np.full((height, width), 128)
-        shift_value = gray_img - reduce_matrix
-        shift_sum = sum(map(sum, shift_value))
-        print(str(shift_sum))
-        data.append(shift_sum)
+        gray_img = gray_img.reshape(1, -1)
+        shift_mean_sum = numba_sum.nb_sum(gray_img[0])
+        data.append(shift_mean_sum)
     print('Brightness OK')
     return data
