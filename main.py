@@ -11,13 +11,12 @@ import by_red
 import filter
 import sys
 
-
 ###################################################################################
 # parameters
-fromWhere = 0    # 0: from camera, 1: from file
-mode = 0          # 0: brightness, 1: from red channel, 2: from h of hsv
-fps = 30           # device's fps
-filename = 'C:/Users/YT-Laptop/Downloads/HRV/C10_2.mp4'     # video filename
+fromWhere = 1  # 0: from camera, 1: from file
+mode = 0  # 0: brightness, 1: from red channel, 2: from h of hsv
+fps = 30  # device's fps
+filename = 'C:/Users/YT-Laptop/Downloads/HRV/C18.mp4'  # video filename
 
 ###################################################################################
 # choose from where
@@ -25,7 +24,17 @@ cap_frames = []
 if fromWhere == 0:
     # from camera
     cap = cv2.VideoCapture(0)
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+    cap.set(cv2.CAP_PROP_FOURCC, fourcc)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 300)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 300)
+    cap.set(cv2.CAP_PROP_FPS, 30)
+    cap.set(cv2.CAP_PROP_BRIGHTNESS, 1)
+    cap.set(cv2.CAP_PROP_CONTRAST, 10)
+    cap.set(cv2.CAP_PROP_SATURATION, 10)
+    cap.set(cv2.CAP_PROP_HUE, 10)
+    cap.set(cv2.CAP_PROP_EXPOSURE, 10)
+    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter('output.avi', fourcc, fps, (150, 150))
     f_count = 1
     while cap.isOpened():
@@ -74,10 +83,19 @@ data_heart_frame = peak_counter.count_peak(data_fixed)
 # hr = heart_rate.get_heart_rate(data_heart_frame, 30)
 hrv_sdnn = heart_rate.get_heart_rate_variability(data_heart_frame, fps)
 
-print('Minimum heart rate: ' + str(hrv_sdnn[0]))
-print('Maximum heart rate: ' + str(hrv_sdnn[1]))
-print('Average heart rate: ' + str(hrv_sdnn[2]))
-print('Heart rate variability: ' + str(hrv_sdnn[3]))
-
+# print('Minimum heart rate: ' + str(hrv_sdnn[0]))
+# print('Maximum heart rate: ' + str(hrv_sdnn[1]))
+# print('Average heart rate: ' + str(hrv_sdnn[2]))
+# print('Heart rate variability: ' + str(hrv_sdnn[3]))
+show = '+------------------------------------------------------+\n' \
+       '|Average heart rate: %3d                               |\n' \
+       '|------------------------------------------------------|\n' \
+       '|Maximum heart rate: %3d                               |\n' \
+       '|------------------------------------------------------|\n' \
+       '|Average heart rate: %3d                               |\n' \
+       '|------------------------------------------------------|\n' \
+       '|Heart rate variability: %3d                           |\n' \
+       '+------------------------------------------------------+\n'
+print(show%(int(hrv_sdnn[0]), int(hrv_sdnn[1]), int(hrv_sdnn[2]), int(hrv_sdnn[3] * 100)))
 plt.plot(data_fixed)
 plt.show()
